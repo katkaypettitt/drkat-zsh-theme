@@ -59,9 +59,20 @@ git_prompt() {
    echo "$(arrow_start) $(git_prompt_info) $(arrow_end)"
 }
 
-# returns 👾 if there are errors
+# return 👾 if there are errors
 return_status() {
    echo "%(?..👾)"
+}
+
+# add extra styling for activated venvs 
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+venv() {
+   if [[ -v VIRTUAL_ENV ]]; then
+      ARROW_FG="016"
+      ARROW_BG="183"
+      RIGHT_SIDE="183"
+      echo "$(arrow_start) ${VIRTUAL_ENV##*/} %{$FG[$RIGHT_SIDE]%}"
+   fi
 }
 
 ZSH_THEME_GIT_PROMPT_PREFIX=""
@@ -75,6 +86,6 @@ ZSH_THEME_GIT_PROMPT_RENAMED="%{$fg[blue]%} ➦%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_UNMERGED="%{$fg[magenta]%} ±%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_UNTRACKED="%{$fg[white]%} ✱%{$reset_color%}"
 
-PROMPT='$(username)$(directory)$(git_prompt)
+PROMPT='$(venv)$(username)$(directory)$(git_prompt) 
 $(prompt_indicator) '
 RPROMPT='$(current_time)$(return_status)'
